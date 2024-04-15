@@ -45,11 +45,14 @@
             </div>
         </form>
         <div>
-            
-                <a href="{{ url('login/google') }}" class="ml-4">
-                    <i>Iniciar sesión con Google</i>
-                </a>
-           
+            <a href="{{ url('login/google') }}" class="ml-4">
+                <i>Iniciar sesión con Google</i>
+            </a>
+        </div>
+        <div>
+            <a href="{{ url('login/facebook') }}" class="ml-4">
+                <i>Iniciar sesión con Facebook</i>
+            </a>
         </div>
     </x-authentication-card>
 </x-guest-layout>

@@ -33,6 +33,12 @@
                     <i>Iniciar sesión con Google</i>
                 </a>
             </div>
+            <div>
+                <a href="{{ url('login/facebook') }}" class="ml-4">
+                    <i>Iniciar sesión con Facebook</i>
+                </a>
+            </div>
+
 
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
                 <div class="mt-4">

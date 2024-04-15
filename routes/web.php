@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\FacebookController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,4 +32,6 @@ Route::middleware([
 
 Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-//Route::get('/user', [GoogleController::class, 'show']);
+
+Route::get('login/facebook', [FacebookController::class, 'redirectToFacebook']);
+Route::get('login/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
