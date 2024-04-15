@@ -44,5 +44,12 @@
                 </x-button>
             </div>
         </form>
+        <div>
+            
+                <a href="{{ url('login/google') }}" class="ml-4">
+                    <i>Iniciar sesión con Google</i>
+                </a>
+           
+        </div>
     </x-authentication-card>
 </x-guest-layout>
