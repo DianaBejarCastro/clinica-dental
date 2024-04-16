@@ -44,14 +44,16 @@
                 </x-button>
             </div>
         </form>
-        <div>
-            <a href="{{ url('login/google') }}" class="ml-4">
-                <i>Iniciar sesión con Google</i>
+        <div class="mb-4 mt-4 ">
+            <a href="{{ url('login/google') }}" class="ml-2 mr-2 border border-gray-400 hover:bg-gray-300 text-black font-thin py-2 px-4 mb-4 rounded flex items-center justify-center">
+                <img src="{{ asset('fonts/google.png') }}" alt="Icono" class="w-5 h-5 mr-4">
+                Iniciar sesión con Google
             </a>
         </div>
-        <div>
-            <a href="{{ url('login/facebook') }}" class="ml-4">
-                <i>Iniciar sesión con Facebook</i>
+        <div class="mb-4 mt-4">
+            <a href="{{ url('login/facebook') }}" class="ml-2 mr-2 bg-blue-600 hover:bg-blue-700 text-white font-thin py-2 px-4 mb-4 rounded flex items-center justify-center">
+                <img src="{{ asset('fonts/facebook-logo.png') }}" alt="Icono" class="w-5 h-5 mr-4">
+                Iniciar sesión con Facebook
             </a>
         </div>
     </x-authentication-card>
