@@ -8,24 +8,26 @@
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
-
             <div>
-                <x-label for="name" value="{{ __('Name') }}" />
+                <img src="{{asset('logo/logo-color.png')}}" alt="logo" class="m-5 h-9 w-auto mx-auto">
+            </div>
+            <div>
+                <x-label for="name" value="{{ __('Nombre') }}" />
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             </div>
 
             <div class="mt-4">
-                <x-label for="email" value="{{ __('Email') }}" />
+                <x-label for="email" value="{{ __('Correo Electronico') }}" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
             </div>
 
             <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
+                <x-label for="password" value="{{ __('Contraseña') }}" />
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             </div>
 
             <div class="mt-4">
-                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
+                <x-label for="password_confirmation" value="{{ __('Confirmar contraseña') }}" />
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
            
@@ -46,15 +48,16 @@
                     </x-label>
                 </div>
             @endif
-
+            <x-button 
+            class="flex mt-4 justify-center items-center border bg-sky-500 hover:bg-white hover:text-black hover:border-sky-400 text-white font-bold py-2 px-6 rounded-full">
+                {{ __('Registrarse') }}
+            </x-button>
             <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
+                    {{ __('¿Ya estás registrado?') }}
                 </a>
 
-                <x-button class="ms-4">
-                    {{ __('Register') }}
-                </x-button>
+                
             </div>
         </form>
 

@@ -10,6 +10,8 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
 
+    
+
 </head>
 
 <!--<body class="antialiased">-->
@@ -325,10 +327,20 @@
             <div class="md:flex md:items-center md:justify-center">
                 <h2 class="text-xl font-bold text-white">
                     Tu cita en un solo clic, ¡agenda ya!
-                    <button onclick="#"
-                        class="border bg-white text-black border-sky-400 hover:bg-sky-400 hover:text-white font-bold py-1 px-4 rounded-full items-center ml-2 inline-block">
+                    <button onclick="#" class="relative z-10 border bg-white text-black border-sky-400 hover:bg-sky-400 hover:text-white font-bold py-1 px-4 rounded-full items-center ml-2 inline-block">
                         Registrar Cita
                     </button>
+                    <div class="absolute inset-0 flex overflow-hidden z-0 justify-end lg:mr-16  md:mr-16">
+                        <img src="{{asset('img/inicio/boton-raton.png')}}" alt="Imagen de fondo" class="h-10 w-10 object-cover absolute transition-transform duration-300 transform translate-y-full imagen-efecto">
+                    </div>
+
+                    
+                    
+                    
+                    
+                    
+                    
+
             </div>
         </section>
         <!-- end cta -->
@@ -529,6 +541,21 @@
             const tooth = document.getElementById('animated-tooth');
             tooth.classList.add('animate-spin');
         });
+
+
+
+        $(document).ready(function () {
+        $('.relative').hover(
+            function () {
+                $(this).find('.imagen-efecto').removeClass('translate-y-full').addClass('animate-slide-up');
+            },
+            function () {
+                $(this).find('.imagen-efecto').removeClass('animate-slide-up').addClass('translate-y-full');
+            }
+        );
+    });
+
+    
     </script>
 
 </body>

@@ -5,3 +5,12 @@
 [x-cloak] {
     display: none;
 }
+
+::-webkit-scrollbar {
+    width: 0px;  /* Ocultar la barra de desplazamiento en Chrome/Safari */
+  }
+  
+  /* Estilos adicionales para Firefox */
+  html {
+    scrollbar-width: none;
+  }
