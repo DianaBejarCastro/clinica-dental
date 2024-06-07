@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\FacebookController;
+use App\Http\Controllers\CenterController;
+use App\Http\Controllers\SpecialtyController;
+use App\Http\Controllers\AdminController;
+use App\Models\Admin;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,3 +40,19 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 
 Route::get('login/facebook', [FacebookController::class, 'redirectToFacebook']);
 Route::get('login/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
+
+//rutas sucursales
+Route::resource('centers', CenterController::class);
+Route::get('/center', [CenterController::class, 'index'])->name('center');
+Route::get('/centers/{id}', [CenterController::class, 'show']);
+Route::put('/centers/{id}', [CenterController::class, 'update']);
+
+//rutas especialidades
+Route::resource('specialties', SpecialtyController::class);
+Route::get('/specialty', [SpecialtyController::class, 'index'])->name('specialty');
+Route::get('/specialties/{id}', [CenterController::class, 'show']);
+Route::put('/specialties/{id}', [CenterController::class, 'update']);
+
+//rutas administrador
+Route::resource('admins', AdminController::class);
+Route::get('/admin', [AdminController::class, 'index'])->name('admin');
