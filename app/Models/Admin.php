@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Admin extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'ci', // Agrega 'ci' al array $fillable
+        'day_of_birth',
+        'address',
+        'phone',
+        'center_id',
+        'user_id',
+        'is_active',
+    ];
     public function center()
     {
         return $this->belongsTo(Center::class);
@@ -17,4 +26,5 @@ class Admin extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
 }

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class FacebookController extends Controller
 {
@@ -42,6 +43,11 @@ class FacebookController extends Controller
                'email' => $user->email,
                'password' => bcrypt('password'), // Genera una contraseña aleatoria
            ]);
+
+           $patientRole = Role::where('name', 'patient')->first();
+        if ($patientRole) {
+            $existingUser->roles()->attach($patientRole);
+        }
        }
 
             
