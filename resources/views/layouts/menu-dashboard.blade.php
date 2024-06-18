@@ -31,7 +31,7 @@
 
                 <nav class="mt-10">
                     <a class="flex items-center px-6 py-2 mt-4 text-white  hover:bg-black hover:bg-opacity-10"
-                        href="#">
+                        href="{{ route('profile') }}">
                         <img src="{{ asset('img/dashboard/perfil.png') }}" alt="icono" class="h-7 w-auto">
 
                         <span class="mx-3">Perfil</span>
@@ -44,13 +44,19 @@
                         <span class="mx-3">Citas</span>
                     </a>
 
-                    <a class="flex items-center px-6 py-2 mt-4  text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
-                        href="#">
-                        <img src="{{ asset('img/dashboard/paciente.png') }}" alt="icono" class="h-7 w-auto">
-
-                        <span class="mx-3">Pacientes</span>
-                    </a>
-
+                    
+                    <div @click.away="personalOpen = false" x-data="{ personalOpen: false }">
+                        <a @click="personalOpen = !personalOpen" class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100 cursor-pointer">
+                            <img src="{{ asset('img/dashboard/personal.png') }}" alt="icono" class="h-7 w-auto">
+                            <span class="mx-3">Pacientes</span>
+                            <img :src="personalOpen ? '{{ asset('img/dashboard/flecha-arriba.png') }}' : '{{ asset('img/dashboard/flecha-abajo.png') }}'" alt="flecha" class="inline h-4 w-4 mt-1 ml-1 transition-transform duration-200 transform">
+                        </a>
+                        <div x-show="personalOpen" x-transition class="mt-2 space-y-2 px-7">
+                            
+                            <a href="{{ route('patient') }}" class="block px-4 py-2 text-sm text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100">Registrados</a>
+                            <a href="{{ route('complete-patient') }}" class="block px-4 py-2 text-sm text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100">Nuevos</a>
+                        </div>
+                    </div>
                     <div @click.away="personalOpen = false" x-data="{ personalOpen: false }">
                         <a @click="personalOpen = !personalOpen" class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100 cursor-pointer">
                             <img src="{{ asset('img/dashboard/personal.png') }}" alt="icono" class="h-7 w-auto">
@@ -59,16 +65,18 @@
                         </a>
                         <div x-show="personalOpen" x-transition class="mt-2 space-y-2 px-7">
                             
-                            <a href="" class="block px-4 py-2 text-sm text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100">Doctores</a>
+                            <a href="{{ route('dentist') }}" class="block px-4 py-2 text-sm text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100">Dentistas</a>
                             <a href="{{ route('admin') }}" class="block px-4 py-2 text-sm text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100">Administradores</a>
                         </div>
                     </div>
-                    <a class="flex items-center px-6 py-2 mt-4  text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
-                        href="{{ route('center') }}">
-                        <img src="{{ asset('img/dashboard/sucursal.png') }}" alt="icono" class="h-7 w-auto">
+                    @if(Auth::user()->hasRole(['admin', 'super-admin']))
+                        <a class="flex items-center px-6 py-2 mt-4  text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
+                            href="{{ route('center') }}">
+                            <img src="{{ asset('img/dashboard/sucursal.png') }}" alt="icono" class="h-7 w-auto">
 
-                        <span class="mx-3">Sucursales</span>
-                    </a>
+                            <span class="mx-3">Sucursales</span>
+                        </a>
+                    @endif
                     <a class="flex items-center px-6 py-2 mt-4  text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
                         href="{{ route('specialty') }}">
                         <img src="{{ asset('img/dashboard/especialidad.png') }}" alt="icono" class="h-7 w-auto">
@@ -141,7 +149,7 @@
 
     <script src="{{ asset('js/sweetalert2.js') }}"></script>
     <script src="{{ asset('js/lan-Datatable.js') }}"></script>
-
+    
     @livewireScripts
 </body>
 

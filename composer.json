@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "3.0",
         "ramonrietdijk/livewire-tables": "^3.9",
+        "spatie/laravel-permission": "^6.7",
         "yajra/laravel-datatables-oracle": "^10.11"
     },
     "require-dev": {
