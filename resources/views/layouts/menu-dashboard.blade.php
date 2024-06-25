@@ -36,15 +36,23 @@
 
                         <span class="mx-3">Perfil</span>
                     </a>
-
+                    @if(Auth::user()->hasRole(['patient']))
                     <a class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
-                        href="#">
+                        href="{{ route('appointment') }}">
                         <img src="{{ asset('img/dashboard/agenda.png') }}" alt="icono" class="h-7 w-auto">
 
                         <span class="mx-3">Citas</span>
                     </a>
+                    @endif
+                    @if(Auth::user()->hasRole(['admin', 'super-admin']))
+                    <a class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
+                        href="{{ route('appointment-admin') }}">
+                        <img src="{{ asset('img/dashboard/agenda.png') }}" alt="icono" class="h-7 w-auto">
 
-                    
+                        <span class="mx-3">Citas</span>
+                    </a>
+                    @endif
+                    @if(Auth::user()->hasRole(['admin', 'super-admin']))
                     <div @click.away="personalOpen = false" x-data="{ personalOpen: false }">
                         <a @click="personalOpen = !personalOpen" class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100 cursor-pointer">
                             <img src="{{ asset('img/dashboard/personal.png') }}" alt="icono" class="h-7 w-auto">
@@ -57,6 +65,8 @@
                             <a href="{{ route('complete-patient') }}" class="block px-4 py-2 text-sm text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100">Nuevos</a>
                         </div>
                     </div>
+                    @endif
+                    @if(Auth::user()->hasRole(['admin', 'super-admin']))
                     <div @click.away="personalOpen = false" x-data="{ personalOpen: false }">
                         <a @click="personalOpen = !personalOpen" class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100 cursor-pointer">
                             <img src="{{ asset('img/dashboard/personal.png') }}" alt="icono" class="h-7 w-auto">
@@ -69,20 +79,21 @@
                             <a href="{{ route('admin') }}" class="block px-4 py-2 text-sm text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100">Administradores</a>
                         </div>
                     </div>
-                    @if(Auth::user()->hasRole(['admin', 'super-admin']))
+                   
                         <a class="flex items-center px-6 py-2 mt-4  text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
                             href="{{ route('center') }}">
                             <img src="{{ asset('img/dashboard/sucursal.png') }}" alt="icono" class="h-7 w-auto">
 
                             <span class="mx-3">Sucursales</span>
                         </a>
-                    @endif
+                    
                     <a class="flex items-center px-6 py-2 mt-4  text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
                         href="{{ route('specialty') }}">
                         <img src="{{ asset('img/dashboard/especialidad.png') }}" alt="icono" class="h-7 w-auto">
 
                         <span class="mx-3">Especialidades</span>
                     </a>
+                    @endif
                 </nav>
             </div>
             <div class="flex flex-col flex-1 overflow-hidden">

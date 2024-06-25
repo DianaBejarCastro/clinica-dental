@@ -6,6 +6,7 @@ use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Models\Center;
+use App\Models\EmergencyContact;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -77,8 +78,36 @@ class PatientController extends Controller
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'center_id' => 'required|integer',
+            'emergency_name_1' => 'required|string|max:255',
+            'emergency_relationship_1' => 'required|string|max:255',
+            'emergency_address_1' => 'nullable|string|max:255',
+            'emergency_phone_1' => 'required|string|max:15',
+            'emergency_name_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_relationship_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_address_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_phone_2' => 'nullable|string|max:15|required_if:add_second_emergency_contact,on',
         ]);
+        // Guardar el segundo contacto de emergencia si el checkbox está marcado
+        if ($request->has('add_second_emergency_contact')) {
+            $validator->sometimes('emergency_name_2', 'required|string|max:255', function ($input) {
+                return $input->add_second_emergency_contact == 'on';
+            });
 
+            $validator->sometimes('emergency_relationship_2', 'required|string|max:255', function ($input) {
+                return $input->add_second_emergency_contact == 'on';
+            });
+
+            $validator->sometimes('emergency_address_2', 'required|string|max:255', function ($input) {
+                return $input->add_second_emergency_contact == 'on';
+            });
+
+            $validator->sometimes('emergency_phone_2', 'required|string|max:15', function ($input) {
+                return $input->add_second_emergency_contact == 'on';
+            });
+        }
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         // Crear el usuario
         $user = $creator->create($request->all());
         // Realizar el resto de las operaciones en una transacción para asegurar consistencia de datos
@@ -96,6 +125,26 @@ class PatientController extends Controller
                 'user_id' => $user->id,
                 // Usar el ID del usuario recién creado
             ]);
+
+            // Crear el primer contacto de emergencia
+            $emergencyContact1 = EmergencyContact::create([
+                'patient_id' => $patient->id,
+                'name' => $request->emergency_name_1,
+                'relationship' => $request->emergency_relationship_1,
+                'address' => $request->emergency_address_1,
+                'phone' => $request->emergency_phone_1,
+            ]);
+
+            // Guardar el segundo contacto de emergencia si el checkbox está marcado
+            if ($request->has('add_second_emergency_contact')) {
+                EmergencyContact::create([
+                    'patient_id' => $patient->id,
+                    'name' => $request->emergency_name_2,
+                    'relationship' => $request->emergency_relationship_2,
+                    'address' => $request->emergency_address_2,
+                    'phone' => $request->emergency_phone_2,
+                ]);
+            }
 
             // Asignar el rol al usuario
             $role = Role::find(4);
@@ -195,47 +244,47 @@ class PatientController extends Controller
     public function changePassword(Request $request)
     {
         $id = $request->session()->get('patient_edit_id');
-    if (!$id) {
-        return redirect()->route('patient')->with('error', 'ID de paciente no encontrado en la sesión.');
-    }
+        if (!$id) {
+            return redirect()->route('patient')->with('error', 'ID de paciente no encontrado en la sesión.');
+        }
 
-    $patient = Patient::find($id);
-    if (!$patient) {
-        return redirect()->route('patient')->with('error', 'Paciente no encontrado.');
-    }
+        $patient = Patient::find($id);
+        if (!$patient) {
+            return redirect()->route('patient')->with('error', 'Paciente no encontrado.');
+        }
 
-    $user = $patient->user;
+        $user = $patient->user;
 
-    // Validar la nueva contraseña
-    $validator = Validator::make($request->all(), [
-        'password' => [
-            'required',
-            'string',
-            'min:8', // mínimo 8 caracteres
-            'regex:/[a-z]/', // al menos una letra minúscula
-            'regex:/[A-Z]/', // al menos una letra mayúscula
-            'regex:/[0-9]/', // al menos un número
-            'confirmed'
-        ],
-    ]);
+        // Validar la nueva contraseña
+        $validator = Validator::make($request->all(), [
+            'password' => [
+                'required',
+                'string',
+                'min:8', // mínimo 8 caracteres
+                'regex:/[a-z]/', // al menos una letra minúscula
+                'regex:/[A-Z]/', // al menos una letra mayúscula
+                'regex:/[0-9]/', // al menos un número
+                'confirmed'
+            ],
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
-    }
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-    // Si el usuario no tiene contraseña (registrado con Google), permitirle establecer una
-    if (!$user->password) {
+        // Si el usuario no tiene contraseña (registrado con Google), permitirle establecer una
+        if (!$user->password) {
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
+            return redirect()->route('patient')->with('success', 'Contraseña establecida exitosamente.');
+        }
+
+        // Si el usuario ya tiene una contraseña, permitirle cambiarla
         $user->password = Hash::make($request->input('password'));
         $user->save();
-        return redirect()->route('patient')->with('success', 'Contraseña establecida exitosamente.');
+
+        return redirect()->route('patient')->with('success', 'Contraseña actualizada exitosamente.');
     }
-
-    // Si el usuario ya tiene una contraseña, permitirle cambiarla
-    $user->password = Hash::make($request->input('password'));
-    $user->save();
-
-    return redirect()->route('patient')->with('success', 'Contraseña actualizada exitosamente.');
-}
 
     // Manejar la solicitud de establecimiento de contraseña
     public function setPassword(Request $request)
@@ -261,12 +310,11 @@ class PatientController extends Controller
         $user = User::find($id);
         if (!$user) {
             return redirect()->route('patient')->with('error', 'Paciente no encontrado.');
-        }    
+        }
         $user = User::find($id);
         $user->password = Hash::make($request->password);
         $user->save();
 
         return redirect()->route('patient')->with('success', 'Contraseña establecida correctamente.');
     }
-
 }

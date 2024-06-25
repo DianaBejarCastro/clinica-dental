@@ -9,10 +9,6 @@
                 <img src="{{ asset('img/profile/config.png') }}" alt="icono" class="w-8 h-auto">
             </a>
         </div>
-        
-        
-        
-        
         <div class="p-6">
             <h2 class="text-lg font-semibold mb-2">Información de usuario</h2>
             <div class="mb-6 lg:flex lg:items-center">

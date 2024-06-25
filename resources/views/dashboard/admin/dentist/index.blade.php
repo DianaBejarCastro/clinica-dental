@@ -16,6 +16,18 @@
         </div>
 
     </div>
+    <div class="container mx-auto sm:p-2">
+        <div class="flex flex-col items-center mb-4 md:flex-row md:justify-between md:items-center">
+            <div class="w-full flex justify-center md:justify-end">
+                <form action="{{ route('schedule') }}" method="GET">
+                    <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Ver Horarios
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- Empieza tabla -->
     <table id="dentists-table" class="min-w-full bg-white max-h-96" width="100%">
         <thead class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">

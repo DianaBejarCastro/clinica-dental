@@ -38,6 +38,16 @@ class Dentist extends Model
     {
         return $this->belongsToMany(Specialty::class, 'dentist_specialty', 'dentist_id', 'specialty_id');
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
     /**
      * Get the work schedules for the dentist.
      */

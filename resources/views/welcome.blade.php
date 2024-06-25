@@ -327,7 +327,7 @@
             <div class="md:flex md:items-center md:justify-center">
                 <h2 class="text-xl font-bold text-white">
                     Tu cita en un solo clic, ¡agenda ya!
-                    <button onclick="#" class="relative z-10 border bg-white text-black border-sky-400 hover:bg-sky-400 hover:text-white font-bold py-1 px-4 rounded-full items-center ml-2 inline-block">
+                    <button onclick="window.location.href='{{ route('login') }}'" class="relative z-10 border bg-white text-black border-sky-400 hover:bg-sky-400 hover:text-white font-bold py-1 px-4 rounded-full items-center ml-2 inline-block">
                         Registrar Cita
                     </button>
                     <div class="absolute inset-0 flex overflow-hidden z-0 justify-end lg:mr-16  md:mr-16">

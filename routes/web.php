@@ -7,9 +7,12 @@ use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppointmentAdminController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CompletePatientRegistrationController;
 use App\Http\Controllers\DentistController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
 use App\Models\Admin;
 
@@ -35,8 +38,8 @@ Route::middleware([
     'assign.role.if.not.exists', // Añade este middleware
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+        return redirect()->route('profile');
+    });
 });
 
  
@@ -102,3 +105,30 @@ Route::put('admin/user/update', [CompletePatientRegistrationController::class, '
 //Route::resource('profile', UserController::class);
 Route::get('/profile', [UserController::class, 'index'])->name('profile');
 Route::get('/profile/edit', [UserController::class, 'indexConfig'])->name('profile.edit');
+
+
+//rutas horarios
+Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
+Route::get('/table/schedule', [ScheduleController::class, 'tableRegister'])->name('schedule.table');
+Route::post('/schedule/dentist/setEditId', [ScheduleController::class, 'setEditId'])->name('schedule.setEditId');
+Route::get('/admin/schedule/edit/view', [ScheduleController::class, 'showEditView'])->name('schedule.edit.view');
+Route::post('/dashboard/schedule/register/form', [ScheduleController::class, 'store'])->name('schedules.store');
+Route::put('/schedules/{schedule}',[ScheduleController::class, 'update'])->name('schedule.update');
+Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
+Route::get('/schedules/{day}', [ScheduleController::class, 'getSchedulesByDay']);
+Route::put('/update-schedule/{schedule}', [ScheduleController::class, 'updateState']);
+
+//rutas citas medicas
+//paciente
+Route::get('/appointment', [AppointmentController::class, 'index'])->name('appointment');
+Route::get('/appointments/dentists/{center_id}', [AppointmentController::class, 'getDentistsByCenter']);
+Route::get('/appointments/available-times/{dentist_id}', [AppointmentController::class, 'getAvailableTimes']);
+Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');
+Route::post('/appointments/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+
+
+
+//admin
+Route::get('/admin/appointment', [AppointmentAdminController::class, 'index'])->name('appointment-admin');
+Route::get('/appointments/{date}', [AppointmentAdminController::class, 'getAppointmentsByDate']);
+Route::get('/admin/appointment/register', [AppointmentAdminController::class, 'indexRegister'])->name('appointment-admin-register');
