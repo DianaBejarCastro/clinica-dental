@@ -32,17 +32,18 @@ class AppointmentAdminController extends Controller
     // app/Http/Controllers/AppointmentAdminController.php
 
     public function getAppointmentsByDate($date)
-    {
-        $admin = Auth::user()->admin;
-        $adminCenterId = $admin->center_id;
+{
+    $admin = Auth::user()->admin;
+    $adminCenterId = $admin->center_id;
 
-        $appointments = Appointment::where('date', $date)
-            ->where('center_id', $adminCenterId)
-            ->with(['user', 'dentist.user'])
-            ->get();
+    $appointments = Appointment::where('date', $date)
+        ->where('center_id', $adminCenterId)
+        ->with(['user', 'dentist.user'])
+        ->get();
 
-        return response()->json(['appointments' => $appointments]);
-    }
+    return response()->json(['appointments' => $appointments]);
+}
+
 
 
     public function indexRegister()
