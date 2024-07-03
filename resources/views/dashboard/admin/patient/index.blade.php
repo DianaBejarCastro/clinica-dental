@@ -160,22 +160,28 @@ function showInfo(button) {
 
 
 </script>
-@if (session()->has('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Registro exitoso',
-                text: '{{ session('success') }}',
-                confirmButtonText: 'Aceptar'
-            }).then(function() {
-                @php
-                    session()->forget('success');
-                @endphp
-            });
-        });
-    </script>
-@endif
+@if (session('success'))
+   <script>
+       document.addEventListener('DOMContentLoaded', function() {
+           Swal.fire({
+               icon: 'success',
+               title: 'Registro exitoso',
+               text: '{{ session('success') }}',
+               confirmButtonText: 'Aceptar',
+               customClass: {
+                   icon: 'swal2-success-icon'
+               }
+           }).then(() => {
+               // Eliminar la sesión 'success' después de mostrar la alerta
+               @php session()->forget('success') @endphp;
+               // Recargar la página después de 1 segundo (opcional)
+               setTimeout(() => {
+                   window.location.reload();
+               }, 1000); // Cambia el tiempo de espera (en milisegundos) según sea necesario
+           });
+       });
+   </script>
+   @endif
 
 
 

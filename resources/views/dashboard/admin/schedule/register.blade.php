@@ -1,123 +1,127 @@
 @extends('layouts.menu-dashboard')
 @section('title', 'Horarios')
 @section('content-dashboard')
-    <div class="container mx-auto p-4 sm:p-2">
-        <div class="flex flex-col items-center mb-4 md:flex-row md:justify-between md:items-center">
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-4 shadow-sm">
-                Información de Horario
-            </h1>
-        </div>
+<style>
+    .inline-flex.items-center.cursor-pointer {
+  vertical-align: middle;
+}
 
-        <div class="flex justify-center">
-            <div class="bg-white p-6 rounded-lg shadow-md w-full">
-                <h2 class="text-base sm:text-lg font-bold text-gray-600 mb-4 mt-4">Datos Personales del Dentista</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                        <div class="flex items-center">
-                            <span class="font-medium text-gray-700 mr-4">Nombre:</span>
-                            <p class="text-gray-900">{{ old('name', $user->name) }}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="font-medium text-gray-700 mr-7">Cédula:</span>
-                            <p class="text-gray-900">{{ old('ci', $dentist->ci) }}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="font-medium text-gray-700 mr-4">Sucursal:</span>
-                            <p class="text-gray-900">{{ $dentist->center->name_branch }}</p>
-                        </div>
+</style>
+<div class="container mx-auto p-4 sm:p-2 min-h-screen flex flex-col justify-center">
+    <div class="flex flex-col items-center mb-4 md:flex-row md:justify-between md:items-center">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-4 shadow-sm">
+            Información de Horario
+        </h1>
+    </div>
+
+    <div class="flex justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-md w-full">
+            <h2 class="text-base sm:text-lg font-bold text-gray-600 mb-4 mt-4">Datos Personales del Dentista</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-700 mr-4">Nombre:</span>
+                        <p class="text-gray-900">{{ old('name', $user->name) }}</p>
                     </div>
-                    <div>
-                        <div class="flex items-center">
-                            <span class="font-medium text-gray-700 mr-10">Email:</span>
-                            <p class="text-gray-900">{{ old('email', $user->email) }}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="font-medium text-gray-700 mr-2">Dirección:</span>
-                            <p class="text-gray-900">{{ old('address', $dentist->address) }}</p>
-                        </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-700 mr-7">Cédula:</span>
+                        <p class="text-gray-900">{{ old('ci', $dentist->ci) }}</p>
                     </div>
-                    <div>
-                        <div class="flex items-center">
-                            <span class="font-medium text-gray-700 mr-4">Teléfono:</span>
-                            <p class="text-gray-900">{{ old('phone', $dentist->phone) }}</p>
-                        </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-700 mr-4">Sucursal:</span>
+                        <p class="text-gray-900">{{ $dentist->center->name_branch }}</p>
                     </div>
                 </div>
+                <div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-700 mr-10">Email:</span>
+                        <p class="text-gray-900">{{ old('email', $user->email) }}</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-700 mr-2">Dirección:</span>
+                        <p class="text-gray-900">{{ old('address', $dentist->address) }}</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-700 mr-4">Teléfono:</span>
+                        <p class="text-gray-900">{{ old('phone', $dentist->phone) }}</p>
+                    </div>
+                </div>
+            </div>
+            
 
-                @php
-                    $daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-                @endphp
+            @php
+                $daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+            @endphp
 
-                <div class="mt-6">
-                    @foreach ($daysOfWeek as $day)
-                        @php
-                            $schedule = $schedules->firstWhere('day', $day);
+            <div class="mt-6">
+                @foreach ($daysOfWeek as $day)
+                    @php
+                        $schedule = $schedules->firstWhere('day', $day);
+                    @endphp
+                    <div class="border-b border-gray-300 my-4"></div>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center">
+                        <div class="flex items-center w-24">
+                            <div class="w-2 h-2 rounded-full bg-sky-400"></div>
+                            <h2 class="text-base sm:text-lg font-bold text-gray-600 ml-2">{{ $day }}</h2>
+                        </div>
+                        @if ($schedule)
+                            <div class="ml-2 sm:ml-4 flex flex-col sm:flex-row flex-wrap items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                                <p><strong>Hora de Inicio:</strong> {{ $schedule->start_time }}</p>
+                                <p><strong>Hora de Fin:</strong> {{ $schedule->end_time }}</p>
+                                <p><strong>Descanso:</strong> {{ $schedule->break ? 'Sí' : 'No' }}</p>
+                                @if ($schedule->break)
+                                    <p><strong>Inicio de Descanso:</strong> {{ $schedule->start_break }}</p>
+                                    <p><strong>Fin de Descanso:</strong> {{ $schedule->end_break }}</p>
+                                @endif
 
-                        @endphp
-                        <div class="border-b border-gray-300 my-4"></div>
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center">
-                            <div class="flex items-center w-24">
-                                <div class="w-2 h-2 rounded-full bg-sky-400"></div>
-                                <h2 class="text-base sm:text-lg font-bold text-gray-600 ml-2">{{ $day }}</h2>
-                            </div>
-                            @if ($schedule)
-                                <div
-                                    class="ml-2 sm:ml-4 flex flex-col sm:flex-row flex-wrap items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                                    <p><strong>Hora de Inicio:</strong> {{ $schedule->start_time }}</p>
-                                    <p><strong>Hora de Fin:</strong> {{ $schedule->end_time }}</p>
-                                    <p><strong>Descanso:</strong> {{ $schedule->break ? 'Sí' : 'No' }}</p>
-                                    @if ($schedule->break)
-                                        <p><strong>Inicio de Descanso:</strong> {{ $schedule->start_break }}</p>
-                                        <p><strong>Fin de Descanso:</strong> {{ $schedule->end_break }}</p>
-                                    @endif
+                                <div class="flex justify-end w-full mt-2">
+                                    <button data-schedule-id="{{ $schedule->id }}" data-day="{{ $schedule->day }}"
+                                        data-dentist-id="{{ $schedule->dentist_id }}"
+                                        data-start-time="{{ $schedule->start_time }}"
+                                        data-end-time="{{ $schedule->end_time }}" 
+                                        data-break="{{ $schedule->break }}"
+                                        data-start-break="{{ $schedule->start_break }}"
+                                        data-end-break="{{ $schedule->end_break }}" class="edit-schedule-button">
+                                        <img src="{{ asset('img/table/boton-editar.png') }}" alt="editar"
+                                            class="w-6 h-6 object-cover">
+                                    </button>
 
-                                    <div class="flex justify-end w-full mt-2">
-                                        <button data-schedule-id="{{ $schedule->id }}" data-day="{{ $schedule->day }}"
-                                            data-dentist-id="{{ $schedule->dentist_id }}"
-                                            data-start-time="{{ $schedule->start_time }}"
-                                            data-end-time="{{ $schedule->end_time }}" 
-                                            data-break="{{ $schedule->break }}"
-                                            data-start-break="{{ $schedule->start_break }}"
-                                            data-end-break="{{ $schedule->end_break }}" class="edit-schedule-button">
-                                            <img src="{{ asset('img/table/boton-editar.png') }}" alt="editar"
-                                                class="w-6 h-6 object-cover">
-                                        </button>
-
-                                        <button data-schedule-id="{{ $schedule->id }}" class="delete-schedule-btn">
-                                            <img src="{{ asset('img/table/borrar.png') }}" alt="eliminar" class="w-6 h-6 object-cover">
-                                        </button>
-
-                                        
-                                           
-                                            <label class="inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" id="schedule-{{ $schedule->id }}" {{ $schedule->is_active ? 'checked' : '' }} class="sr-only peer">
-
-                                                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Estado</span>
-                                            </label>
-                                        
+                                    <button data-schedule-id="{{ $schedule->id }}" class="delete-schedule-btn">
+                                        <img src="{{ asset('img/table/borrar.png') }}" alt="eliminar" class="w-6 h-6 object-cover">
+                                    </button>
+                                    
+                                    <div>
+                                        <form method="POST" action="{{ route('schedule.toggle', ['schedule' => $schedule->id]) }}">
+                                            @csrf
+                                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                                                {{ $schedule->is_active ? 'Desactivar' : 'Activar' }}
+                                            </button>
+                                        </form>
                                     </div>
-
+                                    
+                                   
                                 </div>
-                            @else
-                                <div class="ml-0 sm:ml-4 flex items-center">
-                                    <button
-                                        class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 open-modal-button"
-                                        data-day="{{ $day }}" data-dentist-id="{{ $dentist->id }}">Registrar
-                                        Horario</button>
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
+                            </div>
+                        @else
+                            <div class="ml-0 sm:ml-4 flex items-center">
+                                <button
+                                    class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 open-modal-button"
+                                    data-day="{{ $day }}" data-dentist-id="{{ $dentist->id }}">Registrar
+                                    Horario</button>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
+</div>
 
 
     <script>
         var storeRoute = "{{ route('schedules.store') }}";
         var csrfToken = '{{ csrf_token() }}';
+        
 
         document.querySelectorAll('.open-modal-button').forEach(button => {
             button.addEventListener('click', function() {
@@ -612,7 +616,7 @@
 </script>
 
 
-</script>
+
 @if (session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {

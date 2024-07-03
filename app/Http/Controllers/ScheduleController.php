@@ -216,11 +216,13 @@ public function destroy($id)
     }
 
 
-    public function updateState(Schedule $schedule)
-{
-    $schedule->update(['is_active' => request('is_active')]);
-
-    return response()->json(['message' => 'Schedule updated successfully']);
-}
+    public function toggleSchedule(Request $request, Schedule $schedule)
+    {
+        $schedule->is_active = !$schedule->is_active;
+        $schedule->save();
+    
+        return redirect()->back()->with('status', 'Estado del horario actualizado.');
+    }
+    
     
 }

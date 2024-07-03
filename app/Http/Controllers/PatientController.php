@@ -182,9 +182,10 @@ class PatientController extends Controller
 
         $user = $patient->user;
         $centers = Center::all();
+        $emergencyContacts = $patient->emergencyContacts;
+        
 
-
-        return view('dashboard.admin.patient.edit', compact('patient', 'user', 'centers'));
+        return view('dashboard.admin.patient.edit', compact('patient', 'user', 'centers', 'emergencyContacts'));
     }
 
     /**
@@ -317,4 +318,77 @@ class PatientController extends Controller
 
         return redirect()->route('patient')->with('success', 'Contraseña establecida correctamente.');
     }
+
+    public function updateEmergencyContact(Request $request, $patientId)
+    {
+        $request->validate([
+            'emergency_name_1' => 'required|string|max:255',
+            'emergency_relationship_1' => 'required|string|max:255',
+            'emergency_address_1' => 'nullable|string|max:255',
+            'emergency_phone_1' => 'required|string|max:15',
+           'emergency_name_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_relationship_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_address_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_phone_2' => 'nullable|string|max:15|required_if:add_second_emergency_contact,on',
+        ]);
+
+        $emergencyContacts = EmergencyContact::where('patient_id', $patientId)->get();
+
+        // Update or create first contact
+        if ($emergencyContacts->count() > 0) {
+            $contact1 = $emergencyContacts[0];
+            $contact1->update([
+                'name' => $request->emergency_name_1,
+                'relationship' => $request->emergency_relationship_1,
+                'address' => $request->emergency_address_1,
+                'phone' => $request->emergency_phone_1,
+            ]);
+        } else {
+            EmergencyContact::create([
+                'patient_id' => $patientId,
+                'name' => $request->emergency_name_1,
+                'relationship' => $request->emergency_relationship_1,
+                'address' => $request->emergency_address_1,
+                'phone' => $request->emergency_phone_1,
+            ]);
+        }
+        if ($request->has('add_second_emergency_contact')) {
+        // Update or create second contact if provided
+        if ($request->filled('emergency_name_2')) {
+            if ($emergencyContacts->count() > 1) {
+                $contact2 = $emergencyContacts[1];
+                $contact2->update([
+                    'name' => $request->emergency_name_2,
+                    'relationship' => $request->emergency_relationship_2,
+                    'address' => $request->emergency_address_2,
+                    'phone' => $request->emergency_phone_2,
+                ]);
+            } else {
+                EmergencyContact::create([
+                    'patient_id' => $patientId,
+                    'name' => $request->emergency_name_2,
+                    'relationship' => $request->emergency_relationship_2,
+                    'address' => $request->emergency_address_2,
+                    'phone' => $request->emergency_phone_2,
+                ]);
+            }
+        }
+
+        } else {
+            // If the second contact is not provided, delete it if it exists
+            if ($emergencyContacts->count() > 1) {
+                $emergencyContacts[1]->delete();
+            }
+        }
+        return redirect()->route('patient')->with('success', 'Contacto de emergencia actualizado.');
+    }
+
+    public function destroyEmergencyContact($contactId)
+    {
+        $contact = EmergencyContact::findOrFail($contactId);
+        $contact->delete();
+
+        return redirect()->route('patient')->with('success', 'Contacto de emergencia actualizado');
+    }
+
 }

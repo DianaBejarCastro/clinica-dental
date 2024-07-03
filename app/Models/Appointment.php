@@ -28,4 +28,8 @@ class Appointment extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function center()
+    {
+        return $this->belongsTo(Center::class);
+    }
 }

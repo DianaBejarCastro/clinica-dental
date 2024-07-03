@@ -52,7 +52,15 @@
                             <span class="mx-3">Citas</span>
                         </a>
                     @endif
-                    @if (Auth::user()->hasRole(['admin', 'super-admin']))
+                    @if (Auth::user()->hasRole(['dentist', 'doctor']))
+                        <a class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100"
+                            href="{{ route('appointment-dentist') }}">
+                            <img src="{{ asset('img/dashboard/agenda.png') }}" alt="icono" class="h-7 w-auto">
+
+                            <span class="mx-3">Citas</span>
+                        </a>
+                    @endif
+                    @if (Auth::user()->hasRole(['admin', 'super-admin', 'dentist', 'doctor']))
                         <div @click.away="personalOpen = false" x-data="{ personalOpen: false }">
                             <a @click="personalOpen = !personalOpen"
                                 class="flex items-center px-6 py-2 mt-4 text-white hover:bg-black hover:bg-opacity-10 hover:text-gray-100 cursor-pointer">
@@ -125,7 +133,7 @@
                             <img src="{{ asset('logo/logo-color.png') }}" alt="logo" class="h-5 w-auto mr-3">
                         </div>
 
-                        @if (Auth::user()->hasRole(['admin', 'super-admin']))
+                        @if (Auth::user()->hasRole(['admin', 'super-admin', 'dentist', 'doctor']))
                         <!-- Contenedor principal del menú desplegable -->
                     <div x-data="{ dropdownOpen: false, notifications: ['Notificación 1', 'Notificación 2', 'Notificación 3'] }" class="relative">
                         <!-- Botón que abre y cierra el menú desplegable -->

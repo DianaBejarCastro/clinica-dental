@@ -38,7 +38,7 @@ class UserController extends Controller
                     'created_at' => $admin->created_at,
                 ];
             }
-        } elseif ($roleId == 3) {
+        } elseif ($roleId == 3 || $roleId == 5) {
             $dentist = Dentist::where('user_id', $user->id)->with('center')->first();
             if ($dentist) {
                 $data['relatedData'] = [

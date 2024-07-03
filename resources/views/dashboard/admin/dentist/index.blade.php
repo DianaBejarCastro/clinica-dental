@@ -20,8 +20,7 @@
         <div class="flex flex-col items-center mb-4 md:flex-row md:justify-between md:items-center">
             <div class="w-full flex justify-center md:justify-end">
                 <form action="{{ route('schedule') }}" method="GET">
-                    <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Ver Horarios
                     </button>
                 </form>
@@ -43,22 +42,17 @@
             @foreach ($dentists as $dentist)
                 <tr class="border-b border-gray-200 hover:bg-gray-100">
                     <td class="">
-                        <button class="" onclick="showInfo(this)" 
-                            data-ci="{{ $dentist->ci }}"
-                            data-name="{{ $dentist->name }}" 
-                            data-center="{{ $dentist->center }}"
-                            data-email="{{ $dentist->email }}" 
-                            data-birthdate="{{ $dentist->birthdate }}"
-                            data-address="{{ $dentist->address }}" 
-                            data-phone="{{ $dentist->phone }}"
-                            data-role="{{ $dentist->role }}" 
-                            data-dentist_created_at="{{ $dentist->dentist_created_at }}"
+                        <button class="" onclick="showInfo(this)" data-ci="{{ $dentist->ci }}"
+                            data-name="{{ $dentist->name }}" data-center="{{ $dentist->center }}"
+                            data-email="{{ $dentist->email }}" data-birthdate="{{ $dentist->birthdate }}"
+                            data-address="{{ $dentist->address }}" data-phone="{{ $dentist->phone }}"
+                            data-role="{{ $dentist->role }}" data-dentist_created_at="{{ $dentist->dentist_created_at }}"
                             data-dentist_updated_at="{{ $dentist->dentist_updated_at }}"
                             data-specialties="{{ $dentist->specialties }}">
                             <img src="{{ asset('img/table/circulo-plus.png') }}" alt="Ver más info" class="w-5 h-5">
                         </button>
                     </td>
-                    
+
                     <td class="py-2 px-2">{{ $dentist->ci }}</td>
                     <td class="py-2 px-2">{{ $dentist->name }}</td>
                     <td class="py-2 px-2">{{ $dentist->center }}</td>
@@ -90,44 +84,46 @@
         var csrfToken = '{{ csrf_token() }}';
 
         function editDentist(dentistId) {
-    fetch('{{ route('dentist.setEditId') }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ id: dentistId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            window.location.href = '{{ route('dentist.edit.view') }}';
-        } else {
-            console.error('Error setting session ID');
+            fetch('{{ route('dentist.setEditId') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        id: dentistId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        window.location.href = '{{ route('dentist.edit.view') }}';
+                    } else {
+                        console.error('Error setting session ID');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
-    })
-    .catch(error => console.error('Error:', error));
-}
 
 
 
-function showInfo(button) {
-    var ci = button.getAttribute('data-ci');
-    var name = button.getAttribute('data-name');
-    var center = button.getAttribute('data-center');
-    var email = button.getAttribute('data-email');
-    var birthdate = button.getAttribute('data-birthdate');
-    var address = button.getAttribute('data-address');
-    var phone = button.getAttribute('data-phone');
-    var role = button.getAttribute('data-role');
-    var dentist_created_at = button.getAttribute('data-dentist_created_at');
-    var dentist_updated_at = button.getAttribute('data-dentist_updated_at');
-    var specialties = button.getAttribute('data-specialties');
+        function showInfo(button) {
+            var ci = button.getAttribute('data-ci');
+            var name = button.getAttribute('data-name');
+            var center = button.getAttribute('data-center');
+            var email = button.getAttribute('data-email');
+            var birthdate = button.getAttribute('data-birthdate');
+            var address = button.getAttribute('data-address');
+            var phone = button.getAttribute('data-phone');
+            var role = button.getAttribute('data-role');
+            var dentist_created_at = button.getAttribute('data-dentist_created_at');
+            var dentist_updated_at = button.getAttribute('data-dentist_updated_at');
+            var specialties = button.getAttribute('data-specialties');
 
-    // Mostrar los datos en un modal de SweetAlert
-    Swal.fire({
-        title: 'Información del Dentista',
-        html: `
+            // Mostrar los datos en un modal de SweetAlert
+            Swal.fire({
+                title: 'Información del Dentista',
+                html: `
       <div style="display: grid; grid-template-columns: max-content 1fr; grid-row-gap: 0.5rem; justify-content: start;">
         <strong style="grid-column: 1; text-align: left;">CI:</strong>
         <span style="grid-column: 2; text-align: left;">${ci}</span>
@@ -163,21 +159,34 @@ function showInfo(button) {
         <span style="grid-column: 2; text-align: left;">${dentist_updated_at}</span>
       </div>
       `,
-        confirmButtonText: 'Aceptar'
-    });
-}
-
-    </script>
-    @if (session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Registro exitoso',
-                    text: '{{ session('success') }}',
-                    confirmButtonText: 'Aceptar'
-                });
+                confirmButtonText: 'Aceptar'
             });
-        </script>
-    @endif
+        }
+    </script>
+@if (session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'success',
+            title: 'Registro exitoso',
+            text: '{{ session('success') }}',
+            confirmButtonText: 'Aceptar',
+            customClass: {
+                icon: 'swal2-success-icon'
+            }
+        }).then(() => {
+            // Eliminar la sesión 'success' después de mostrar la alerta
+            @php session()->forget('success') @endphp;
+            // Recargar la página después de 1 segundo (opcional)
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000); // Cambia el tiempo de espera (en milisegundos) según sea necesario
+        });
+    });
+</script>
+@endif
+
+
+
+
 @endsection

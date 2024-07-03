@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Center;
+use App\Models\EmergencyContact;
 use App\Models\Patient;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -73,6 +74,14 @@ class CompletePatientRegistrationController extends Controller
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'center_id' => 'required|integer',
+            'emergency_name_1' => 'required|string|max:255',
+            'emergency_relationship_1' => 'required|string|max:255',
+            'emergency_address_1' => 'nullable|string|max:255',
+            'emergency_phone_1' => 'required|string|max:15',
+            'emergency_name_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_relationship_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_address_2' => 'nullable|string|max:255|required_if:add_second_emergency_contact,on',
+            'emergency_phone_2' => 'nullable|string|max:15|required_if:add_second_emergency_contact,on',
         ]);
 
         // Obtener el ID del usuario de la sesión
@@ -104,6 +113,25 @@ class CompletePatientRegistrationController extends Controller
                 'center_id' => $request->center_id,
             ]
         );
+        // Crear el primer contacto de emergencia
+        $emergencyContact1 = EmergencyContact::create([
+            'patient_id' => $patient->id,
+            'name' => $request->emergency_name_1,
+            'relationship' => $request->emergency_relationship_1,
+            'address' => $request->emergency_address_1,
+            'phone' => $request->emergency_phone_1,
+        ]);
+
+        // Guardar el segundo contacto de emergencia si el checkbox está marcado
+        if ($request->has('add_second_emergency_contact')) {
+            EmergencyContact::create([
+                'patient_id' => $patient->id,
+                'name' => $request->emergency_name_2,
+                'relationship' => $request->emergency_relationship_2,
+                'address' => $request->emergency_address_2,
+                'phone' => $request->emergency_phone_2,
+            ]);
+        }
 
         return redirect()->route('patient')->with('success', 'Perfil actualizado correctamente.');
     }

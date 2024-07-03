@@ -9,12 +9,15 @@ use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentAdminController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AppointmentDentistController;
 use App\Http\Controllers\CompletePatientRegistrationController;
 use App\Http\Controllers\DentistController;
+use App\Http\Controllers\InfoPersonalScheduleController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
 use App\Models\Admin;
+use App\Models\Patient;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +84,7 @@ Route::post('/admin/dentist/setEditId', [DentistController::class, 'setEditId'])
 Route::get('/admin/dentist/edit/view', [DentistController::class, 'showEditView'])->name('dentist.edit.view');
 Route::put('admin/dentist/update', [DentistController::class, 'update'])->name('dentist.update');
 Route::post('/admin/dentist/change-password', [DentistController::class, 'changePassword'])->name('dentist.changePassword');
+Route::post('/admin/dentist/cancel', [DentistController::class, 'clearSuccessSession'])->name('dentist.clear-success-session');
 
 //rutas paciente
 Route::resource('patient', PatientController::class);
@@ -100,6 +104,11 @@ Route::post('/admin/patient/setRegisterId', [CompletePatientRegistrationControll
 Route::get('/admin/user-patient/edit/view', [CompletePatientRegistrationController::class, 'showRegisterView'])->name('registerPatient.edit.view');
 Route::put('admin/user/update', [CompletePatientRegistrationController::class, 'update'])->name('user.update');
 
+//rutas de contacto de emergencia de paciente 
+Route::put('/emergency-contacts/{patientId}', [PatientController::class, 'updateEmergencyContact'])->name('emergency-contacts.update');
+Route::delete('/emergency-contacts/{contactId}', [PatientController::class, 'destroyEmergencyContact'])->name('emergency-contacts.destroy');
+
+
 //rutas gestion de perfil 
 
 //Route::resource('profile', UserController::class);
@@ -116,7 +125,7 @@ Route::post('/dashboard/schedule/register/form', [ScheduleController::class, 'st
 Route::put('/schedules/{schedule}',[ScheduleController::class, 'update'])->name('schedule.update');
 Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
 Route::get('/schedules/{day}', [ScheduleController::class, 'getSchedulesByDay']);
-Route::put('/update-schedule/{schedule}', [ScheduleController::class, 'updateState']);
+Route::post('/schedule/toggle/{schedule}', [ScheduleController::class, 'toggleSchedule'])->name('schedule.toggle');
 
 //rutas citas medicas
 //paciente
@@ -132,3 +141,21 @@ Route::post('/appointments/cancel', [AppointmentController::class, 'cancel'])->n
 Route::get('/admin/appointment', [AppointmentAdminController::class, 'index'])->name('appointment-admin');
 Route::get('/appointments/{date}', [AppointmentAdminController::class, 'getAppointmentsByDate']);
 Route::get('/admin/appointment/register', [AppointmentAdminController::class, 'indexRegister'])->name('appointment-admin-register');
+
+Route::get('/dentists-by-center/{center_id}', [AppointmentAdminController::class, 'getDentistsByCenter']);
+Route::get('/admin/appointments/available-times/{dentist_id}', [AppointmentAdminController::class, 'getAvailableTimes']);
+Route::post('/appointments/store/admin', [AppointmentAdminController::class, 'store'])->name('appointments.store.admin');
+Route::get('admin/appointments/{id}', [AppointmentAdminController::class, 'getAppointment'])->name('appointments.get');
+Route::get('/appointments/{id}/edit', [AppointmentAdminController::class, 'edit'])->name('appointments.edit');
+Route::put('/appointments/{id}', [AppointmentAdminController::class, 'update'])->name('appointments.update');
+
+
+//info de citas medicas por paciente 
+Route::get('/appointment/personal', [InfoPersonalScheduleController::class, 'index'])->name('appointment-personal');
+
+//dentista 
+Route::get('/dentist/appointment', [AppointmentDentistController::class, 'index'])->name('appointment-dentist');
+Route::get('/dentist/appointments/{date}', [AppointmentDentistController::class, 'getAppointmentsByDate']);
+Route::put('/dectists/appointments/{id}', [AppointmentDentistController::class, 'update'])->name('dentist.appointments.update');
+Route::get('/dentists/{id}/schedules', [AppointmentDentistController::class, 'getSchedulesByDentist']);
+

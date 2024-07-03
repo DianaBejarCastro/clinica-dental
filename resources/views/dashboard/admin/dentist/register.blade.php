@@ -159,6 +159,7 @@
                     @endforeach
                 '</ul>'
             });
+           
         </script>
     @endif
 @endsection

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Specialty;
 use App\Models\DentistSpecialty;
 
+
 class DentistController extends Controller
 {
     /**
@@ -55,7 +56,7 @@ class DentistController extends Controller
                 'dentists.updated_at'
             )
             ->get();
-    
+            
         return view('dashboard.admin.dentist.index', compact('dentists'));
     }
     
@@ -123,9 +124,8 @@ class DentistController extends Controller
             }
         });
 
-        return redirect()->route('dentist')->with('success', 'Usuario registrado con éxito.');
+        return redirect()->route('dentist')->with('success', 'El dentista se ha registrado correctamente.');
     }
-
 
     public function setEditId(Request $request)
     {
@@ -246,4 +246,12 @@ class DentistController extends Controller
 
         return redirect()->route('dentist')->with('success', 'Contraseña actualizada exitosamente.');
     }
+
+   public function clearSuccessSession(Request $request)
+{
+    $request->session()->forget('success');
+    return response()->json(['message' => 'Mensaje de éxito eliminado de la sesión']);
+}
+
+
 }

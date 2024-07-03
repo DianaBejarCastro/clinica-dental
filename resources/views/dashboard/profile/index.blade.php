@@ -50,7 +50,7 @@
                     <p><strong>Creado en:</strong> {{ $relatedData['created_at'] ?? 'N/A' }}</p>
                 </div>
             </div>
-            @elseif($role == 3)
+            @elseif($role == 3 || $role == 5)
             <div class="mb-6">
                 <h2 class="text-lg font-semibold mb-2">Datos de Dentista</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

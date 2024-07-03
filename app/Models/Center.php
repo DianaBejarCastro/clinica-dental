@@ -13,4 +13,8 @@ class Center extends Model
         'address',
         'is_active',
     ];
+    public function dentist()
+    {
+        return $this->belongsTo(Dentist::class);
+    }
 }

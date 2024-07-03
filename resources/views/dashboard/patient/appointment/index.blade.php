@@ -97,6 +97,7 @@
 
         });
 
+        
         var storeRoute = "{{ route('appointments.store') }}";
         var csrfToken = '{{ csrf_token() }}';
 
@@ -241,29 +242,60 @@
                 let dentistSelect = document.getElementById('dentist_id');
                 let dateInput = document.getElementById('date');
                 if (dentistSelect.value && dateInput.value) {
-                    let date = new Date(dateInput.value);
-                    let dayOfWeek = date.getDay();
-
-                    fetch(
-                            `/appointments/available-times/${dentistSelect.value}?day_of_week=${dayOfWeek}&date=${dateInput.value}`
-                        )
-                        .then(response => response.json())
-                        .then(data => {
-                            let timeSelect = document.getElementById('start_time');
-                            timeSelect.innerHTML = '<option value="">Selecciona un horario</option>';
-                            let noTimesMessage = document.getElementById('no-times-message');
-                            if (data.length === 0) {
-                                noTimesMessage.textContent =
-                                    'No hay horarios disponibles. Por favor, escoge otro día.';
-                            } else {
-                                noTimesMessage.textContent = '';
-                                data.forEach(time => {
-                                    timeSelect.innerHTML += `<option value="${time}">${time}</option>`;
-                                });
-                            }
-                        });
+                    let selectedDate = new Date(dateInput.value + "T00:00:00");
+                    let currentDate = new Date();
+                    let dayOfWeek = selectedDate.getDay();
+                    dayOfWeek = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+                    
+                    // Si la fecha seleccionada es hoy, solo mostrar horarios posteriores a la hora actual
+                    let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes();
+                    let timeSelect = document.getElementById('start_time');
+                    
+                    timeSelect.innerHTML = '<option value="">Selecciona un horario</option>';
+                    let noTimesMessage = document.getElementById('no-times-message');
+                    if (selectedDate.getDate() == currentDate.getDate()) {
+                        
+                        fetch(
+                                `/appointments/available-times/${dentistSelect.value}?day_of_week=${dayOfWeek}&date=${dateInput.value}`
+                            )
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.length === 0) {
+                                    noTimesMessage.textContent =
+                                        'No hay horarios disponibles. Por favor, escoge otro día.';
+                                } else {
+                                    noTimesMessage.textContent = '';
+                                    data.forEach(time => {
+                                        if (time > currentTime) {
+                                            timeSelect.innerHTML +=
+                                                `<option value="${time}">${time}</option>`;
+                                        }
+                                    });
+                                }
+                            });
+                    }
+                    // Si la fecha seleccionada no es hoy, mostrar todos los horarios disponibles
+                    else {
+                        fetch(
+                                `/appointments/available-times/${dentistSelect.value}?day_of_week=${dayOfWeek}&date=${dateInput.value}`
+                            )
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.length === 0) {
+                                    noTimesMessage.textContent =
+                                        'No hay horarios disponibles. Por favor, escoge otro día.';
+                                } else {
+                                    noTimesMessage.textContent = '';
+                                    data.forEach(time => {
+                                        timeSelect.innerHTML +=
+                                            `<option value="${time}">${time}</option>`;
+                                    });
+                                }
+                            });
+                    }
                 }
             }
+
 
             // Set min and max dates for the date input
             const dateInput = document.getElementById('date');
