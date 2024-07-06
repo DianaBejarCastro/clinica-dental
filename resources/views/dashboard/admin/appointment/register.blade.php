@@ -41,9 +41,14 @@
                             <button onclick="register('{{ $patient->user_id }}')">
                                 <img src="{{ asset('img/table/cita.png') }}" alt="editar" class="w-6 h-6">
                             </button>
-                            <button class="">
-                                <img src="{{ asset('img/table/dientes.png') }}" alt="eliminar" class="w-6 h-6">
-                            </button>
+                            @if (Auth::user()->hasRole(['dentist', 'doctor']))
+                                <button onclick="historyMedical('{{ $patient->id }}')">
+                                    <img src="{{ asset('img/table/dientes.png') }}" alt="historial_clinico"
+                                        class="w-6 h-6">
+                                </button>
+                            @endif
+
+
                         </td>
                     </tr>
                 @endforeach
@@ -64,9 +69,12 @@
                             <button onclick="register('{{ $incomplete->id }}')">
                                 <img src="{{ asset('img/table/cita.png') }}" alt="editar" class="w-6 h-6">
                             </button>
-                            <button class="">
-                                <img src="{{ asset('img/table/dientes.png') }}" alt="eliminar" class="w-6 h-6">
-                            </button>
+                            @if (Auth::user()->hasRole(['dentist', 'doctor']))
+                                <button onclick="showWarningModal()">
+                                    <img src="{{ asset('img/table/dientes.png') }}" alt="historial_clinico"
+                                        class="w-6 h-6">
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -279,7 +287,7 @@
                     dentistSelect.innerHTML = '<option value="">Selecciona un dentista</option>';
                     data.forEach(dentist => {
                         dentistSelect.innerHTML +=
-                        `<option value="${dentist.id}">${dentist.user.name}</option>`;
+                            `<option value="${dentist.id}">${dentist.user.name}</option>`;
                     });
                 });
         }
@@ -298,7 +306,8 @@
                 let noTimesMessage = document.getElementById('no-times-message');
 
                 fetch(
-                        `/appointments/available-times/${dentistSelect.value}?day_of_week=${dayOfWeek}&date=${dateInput.value}`)
+                        `/appointments/available-times/${dentistSelect.value}?day_of_week=${dayOfWeek}&date=${dateInput.value}`
+                    )
                     .then(response => response.json())
                     .then(data => {
                         if (data.length === 0) {
@@ -313,4 +322,38 @@
             }
         }
     </script>
+    <script>
+        function showWarningModal() {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Datos Personales Incompletos',
+                text: 'Debe registrar todos sus datos personales antes de acceder al historial clínico.',
+                confirmButtonText: 'Entendido'
+            });
+        }
+    </script>
+<script>
+    function historyMedical(patientId) {
+        fetch('{{ route('history.setEditId') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    id: patientId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = '{{ route('history.edit.view') }}';
+                } else {
+                    console.error('Error setting session ID');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
 @endsection

@@ -7,12 +7,18 @@ use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AllergyController;
 use App\Http\Controllers\AppointmentAdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AppointmentDentistController;
 use App\Http\Controllers\CompletePatientRegistrationController;
 use App\Http\Controllers\DentistController;
+use App\Http\Controllers\DiseaseController;
 use App\Http\Controllers\InfoPersonalScheduleController;
+use App\Http\Controllers\MedicalHistoryController;
+use App\Http\Controllers\medicatinController;
+use App\Http\Controllers\MedicationController;
+use App\Http\Controllers\OdontogramController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
@@ -159,3 +165,29 @@ Route::get('/dentist/appointments/{date}', [AppointmentDentistController::class,
 Route::put('/dectists/appointments/{id}', [AppointmentDentistController::class, 'update'])->name('dentist.appointments.update');
 Route::get('/dentists/{id}/schedules', [AppointmentDentistController::class, 'getSchedulesByDentist']);
 
+// Historial clinico
+Route::post('/history/setEditId', [MedicalHistoryController::class, 'setEditId'])->name('history.setEditId');
+Route::get('/history/edit/view', [MedicalHistoryController::class, 'showEditView'])->name('history.edit.view');
+
+Route::get('/medical-history', [MedicalHistoryController::class, 'show'])->name('medical.history.show');
+
+//Enfermedades
+Route::post('diseases/store', [DiseaseController::class, 'store'])->name('diseases.store');
+Route::put('/update', [DiseaseController::class, 'update'])->name('diseases.update');
+Route::delete('/diseases/delete/{id}', [DiseaseController::class, 'delete'])->name('diseases.delete');
+
+
+//Alergias 
+Route::post('allergies/store', [AllergyController::class, 'store'])->name('allergies.store');
+Route::put('/allergies/update', [AllergyController::class, 'update'])->name('allergies.update');
+Route::delete('/allergies/delete/{id}', [AllergyController::class, 'delete'])->name('allergies.delete');
+
+//Medicamentos 
+Route::post('medications/store', [MedicationController::class, 'store'])->name('medications.store');
+Route::put('/medications/update', [MedicationController::class, 'update'])->name('medications.update');
+Route::delete('/medications/delete/{id}', [MedicationController::class, 'delete'])->name('medications.delete');
+
+//Odontogram
+
+Route::post('/odontogram/setEditId', [OdontogramController::class, 'setEditId'])->name('odontogram.setEditId');
+Route::get('/odontogram/edit/view', [OdontogramController::class, 'showEditView'])->name('odontogram.edit.view');
